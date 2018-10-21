@@ -1,25 +1,38 @@
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+const cors = require('cors');
 const compression = require('compression');
 const API_KEY = 'b214b2f6cd4cb56d9c0a986a2215d33f'
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(compression());
+app.use(cors());
 
+app.get("/comicvine_api", (req, res) => {
+  const searchTerm = req.query.search_term
+  const apiKey = "2736f1620710c52159ba0d0aea337c59bd273816"
+  const URL = `https://comicvine.gamespot.com/api/search/?api_key=${apiKey}&format=json&query=${searchTerm}&resources=volume`
+  Axios.get(URL).then(response => res.send(response.data.results))
+})
 
-app.get('/search/:movie', (req, res) => {
-  const movie = req.params.movie;
-  axios(`http://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${movie}`)
-  .then(res => res.data.results.map(item => ({
-      id: item.id,
-      title: item.title,
-      img: item.poster_path,
-      desc: item.overview,
-      date: item.release_date
-  })))
-  .then(data => res.json(data))
+app.get("/saveImage/:imageUrl/:id", (req, res) => {
+  const imageData = req.params.imageUrl
+  res.writeHead(200, {
+    'Content-Type': 'image/jpeg' ,
+    'Cache-Control': 'max-age=31536000',
+    'etag': `${Date.now()}`
+
+  });
+  const imgUrl = decodeURIComponent(imageData);
+  request.get({
+    url: imgUrl,
+    headers:{
+      'User-Agent': 'request'
+    }
+  })
+  .pipe(res)
 })
 
 if (process.env.NODE_ENV === 'production') {
