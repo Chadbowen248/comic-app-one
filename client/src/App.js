@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import base from "./base";
+import './App.css';
 import ComicCollection from "./Landing";
 import Search from "./Search";
 import Navigation from "./Navigation";

@@ -18,7 +18,7 @@ const ComicImage = styled.img`
 `
 const ComicTitle = styled.p`
 font-size: 1vw;
-font-family: 'Fjalla One', sans-serif;
+font-family: 'Oswald', sans-serif;
 color: #333;
 `
 const ComicDeleteBtn = styled.button`

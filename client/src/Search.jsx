@@ -35,7 +35,7 @@ padding: 5px;
 
 const h1 = {
   marginLeft: "35px",
-  fontFamily: "Coda",
+  fontFamily: "Oswald",
   textTransform: "uppercase",
   fontSize: "16px"
 };

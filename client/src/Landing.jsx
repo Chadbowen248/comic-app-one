@@ -6,20 +6,17 @@ import ComicCollectionComic from "./ComicCollectionComic";
 const ComicWrapper = styled.div`
 display: flex;
 flex-wrap: wrap;
-width: 100%;
 margin-top: 1.5em;
 margin-bottom: 1.5em;
 justify-content: flex-start;
-padding-right: .5em;
-padding-left: .5em;
 `;
 
-const ComicSearch = styled.input`
-margin-top: 1.5em;
-width: 100%;
-height: 50px;
-text-align: center;
-`
+// const ComicSearch = styled.input`
+// margin-top: 1.5em;
+// width: 90%;
+// height: 50px;
+// text-align: center;
+// `
 
 class ComicCollection extends React.Component {
   state = {
@@ -35,13 +32,13 @@ class ComicCollection extends React.Component {
   render() {
     return (
       <div>
-        <ComicSearch
+        <input className="collection-search"
           type="text"
           placeholder="Search"
           value={this.state.searchTerm}
           onChange={this.handleSearchTermChange}
         />
-        <ComicWrapper>
+        <div className="collection-wrapper">
           {Object.entries(this.props.collection)
             .sort((a, b) => {
               if (
@@ -69,7 +66,7 @@ class ComicCollection extends React.Component {
                 removeComic={this.props.removeComic}
               />
             ))}
-        </ComicWrapper>
+        </div>
       </div>
     );
   }
