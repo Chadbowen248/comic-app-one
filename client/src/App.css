@@ -32,6 +32,49 @@ body * {
   flex-wrap: wrap;
   display: flex;
   margin-top: 1.5em;
+  width: 100%;
+  padding-right: 1em;
+  padding-left: 1em;
   margin-bottom: 1.5em;
   justify-content: flex-start;
+}
+
+.collection-single-comic__wrapper {
+  flex: 0 0 20%;
+  margin-bottom: 10px;
+}
+
+.collection-single-comic {
+  margin-left: 2.5%;
+  border: 1px solid #ccc;
+  padding: 1em;
+  padding-bottom: 2em;
+  margin-top: .5em;
+  margin-bottom: .5em;
+  height: 100%;
+  margin-right: 2.5%;
+}
+
+@media (max-width: 1230px) {
+  .collection-single-comic__wrapper {
+    flex: 0 0 25%;
+  }
+}
+@media (max-width: 1030px) {
+  .collection-single-comic__wrapper {
+    flex: 0 0 33.33%;
+  }
+}
+@media (max-width: 830px) {
+  .collection-single-comic__wrapper {
+    flex: 0 0 50%;
+  }
+}
+@media (max-width: 500px) {
+  .collection-single-comic__wrapper {
+    flex: 0 0 100%;
+  }
+  .navigation__link {
+    font-size: 12px;
+  }
 }
