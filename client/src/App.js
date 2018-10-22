@@ -1,84 +1,107 @@
-import React, { Component } from "react"
-import { BrowserRouter, Route } from "react-router-dom"
-import { auth, googleAuthProvider } from './firebase';
-import firebase from "./firebase"
-import SignIn from "./SignIn"
-import Navigation from "./Navigation"
-import Search from "./Search"
-import Home from "./Home"
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import base from "./base";
+import ComicCollection from "./Landing";
+import Search from "./Search";
+import Navigation from "./Navigation";
 
-import "./App.css"
+class App extends React.Component {
+  state = {
+    collection: [],
+    titleInput: "",
+    imagePath: ""
+  };
 
-class App extends Component {
-  // constructor here to include the React component 'class' 
-  // and super is to not override defualts but to just include
-  // custom methods/logic
-  constructor(props) {
-    super(props)
-    this.state = {
-      movies: null,
-      currentUser: null
-    }
-    // the connection to firebase database
-    this.moviesRef = firebase.database().ref('/movies')
-    this.usersRef = firebase.database().ref('/users')
-  }
-
-  componentDidMount() {
-    // take care of component flash if already logged in through google. 
-    const isLoggedIn = window.localStorage.getItem('isLoggedIn') ? true : false;
-    this.setState({currentUser: isLoggedIn})
-    auth.onAuthStateChanged((currentUser) => {
-      if (currentUser) {
-        this.setState({ currentUser })
-      }
-    })
-    // on value, watches and updates db on change
-    this.moviesRef.on("value", snapshot => {
-      this.setState({
-        movies: snapshot.val()
-      })
-    })
-  }
-
-  signOut = () => {
-    // perform signout with Oauth, when that's done
-    // set state to null and clear out logged in flag in LS
-    auth.signOut().then(() => {
-      this.setState({currentUser: null});
-      window.localStorage.removeItem('isLoggedIn');
+  componentWillMount() {
+    this.ref = base.syncState(`/`, {
+      context: this,
+      state: "collection"
     });
   }
 
-  signIn = () => {
-    auth.signInWithPopup(googleAuthProvider).then((result) => {
-      this.setState({currentUser: result.user})
-      window.localStorage.setItem('isLoggedIn', true);
-      // this.registerUser(result.user)
-    })
+  componentWillUnmount() {
+    base.removeBinding(this.ref);
   }
-  
-  addMovie = movie => this.moviesRef.push(movie)
-  // registerUser = user => this.usersRef.push(user.providerData[0]);
+
+  handleTitleInput = event => {
+    this.setState({ titleInput: event.target.value });
+  };
+  handleImagePath = event => {
+    this.setState({ imagePath: event.target.value });
+  };
+
+  removeComic = comic => {
+    this.state.collection[comic] = null;
+    this.setState({ collection: this.state.collection });
+  };
+
+  addComic = comic => {
+    const collection = { ...this.state.collection };
+    const words = [
+      ["One", 1],
+      ["Two", 2],
+      ["Three", 3],
+      ["Four", 4],
+      ["Five", 5],
+      ["Six", 6],
+      ["Seven", 7],
+      ["Eight", 8],
+      ["Nine", 9],
+      ["Ten", 10]
+    ];
+
+    comic.volume
+      ? (comic.finalName = `${comic.volume.name} ${comic.name}`)
+      : (comic.finalName = comic.name);
+    for (let i = 0; i < words.length; i++) {
+      if (comic.finalName.indexOf(words[i][0]) > -1) {
+        comic.finalName = comic.finalName.replace(words[i][0], words[i][1]);
+      }
+    }
+    collection[`comic-${comic.id}`] = comic;
+    this.setState({ collection });
+
+    alert(`${comic.finalName} added!!`);
+  };
+
+  addComicManually = comic => {
+    const collection = { ...this.state.collection };
+    collection[`comic-${comic.id}`] = comic;
+    this.setState({ collection });
+  };
 
   render() {
     return (
       <BrowserRouter>
-        <div>
-          {
-            // if currentUser is null, show login screen
-            !this.state.currentUser ? <SignIn signIn={this.signIn}/> :
-            // else show app
-            <div>
-              <Navigation signOut={this.signOut} userInfo={this.state.currentUser}/>
-              <Route exact path="/" render={() => <Home movies={this.state.movies} currentUser={this.state.currentUser}/>} />
-              <Route exact path="/search" render={() => <Search addMovie={this.addMovie} />} />
-            </div>
-          }
+        <div className="app">
+          <Navigation />
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <ComicCollection
+                collection={this.state.collection}
+                removeComic={this.removeComic}
+              />
+            )}
+          />
+          <Route
+            path="/search"
+            render={() => (
+              <Search
+                addComic={this.addComic}
+                addComicManually={this.addComicManually}
+                handleTitleInput={this.handleTitleInput}
+                handleImagePath={this.handleImagePath}
+                title={this.state.titleInput}
+                image={this.state.imagePath}
+              />
+            )}
+          />
         </div>
       </BrowserRouter>
-    )
+    );
   }
 }
 
-export default App
+export default App;
