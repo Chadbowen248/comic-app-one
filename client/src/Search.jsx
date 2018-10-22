@@ -53,7 +53,7 @@ class Search extends React.Component {
   searchForComic = () => {
     const searchTerm = this.state.searchTerm;
     Axios.get(
-      `http://localhost:7777/comicvine_api?search_term=${searchTerm}`
+      `/comicvine_api?search_term=${searchTerm}`
     ).then(results => this.setState({ results: results.data }));
   };
   render() {
