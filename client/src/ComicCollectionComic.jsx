@@ -17,7 +17,7 @@ const ComicImage = styled.img`
   height: 85%;
 `
 const ComicTitle = styled.p`
-font-size: 1vw;
+font-size: 14px;
 font-family: 'Oswald', sans-serif;
 color: #333;
 `
@@ -40,7 +40,8 @@ class ComicCollectionComic extends React.Component {
     const id = `comic-${this.props.details.id}`
     const encoded = encodeURIComponent(source)
     return (
-      <SingleComic>
+      <div className="collection-single-comic__wrapper">
+      <div className="collection-single-comic">
         <ComicImage
           // src={source}
           src={`/saveImage/${encoded}/${id}`}
@@ -61,7 +62,8 @@ class ComicCollectionComic extends React.Component {
         >
           <img src="close.png" alt="close" />
         </ComicDeleteBtn>
-      </SingleComic>
+      </div>
+      </div>
     )
   }
 }
